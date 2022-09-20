@@ -1,1 +1,34 @@
-
+float x,z,temp;
+void setup()
+{
+  pinMode(8, INPUT);
+  pinMode(6, OUTPUT);
+  pinMode(A4, INPUT);
+  Serial.begin(9600);
+}
+void loop()
+{
+  x= digitalRead(8);
+  z= analogRead(A4);
+  Serial.println(x);
+  Serial.println(z);
+  temp = (double)z / 1024;       
+  temp = temp * 5;                 
+  temp = temp - 0.5;               
+  temp = temp * 100;               
+  if ((x>0))
+  {
+    if ((temp>30))
+    {
+      digitalWrite(6, HIGH);
+    }
+    else if((temp<30))
+    {
+      digitalWrite(6, LOW);
+    }
+  }
+  else
+  {
+    digitalWrite(6, LOW);
+  }
+}
