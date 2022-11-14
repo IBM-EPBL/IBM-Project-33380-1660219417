@@ -1,0 +1,116 @@
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <PubSubClient.h>
+#include <ESP32Servo.h>
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+#define ORG "4fvguz" 
+#define DEVICE_TYPE "ESP32" 
+#define DEVICE_ID "ultrasonic_sensor" 
+#define TOKEN "12345678" 
+
+#define led 14
+#define buzzer 15
+#define pir 2
+#define servoPin 13
+
+Servo servo;
+
+int sensor_value=0;
+int pirState=LOW;
+int val=0;
+
+char server[] = ORG ".messaging.internetofthings.ibmcloud.com";
+char pubTopic[] = "iot-2/evt/status1/fmt/json";
+char authMethod[] = "use-token-auth";
+char token[] = TOKEN;
+char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
+
+WiFiClient wifiClient;
+PubSubClient client(server, 1883, NULL, wifiClient);
+
+void setup() 
+{
+  Serial.begin(115200);
+  pinMode(led, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(pir, INPUT);
+  servo.attach(servoPin, 500, 2400);
+  Serial.print("Connecting to "); 
+  Serial.print(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) 
+  {
+    delay(500);
+    Serial.print(".");
+  } 
+  Serial.println("");   
+  Serial.print("WiFi connected, IP address: "); 
+  Serial.println(WiFi.localIP());
+  if (!client.connected()) 
+  {
+    Serial.print("Reconnecting client to ");
+    Serial.println(server);
+    while (!client.connect(clientId, authMethod, token)) 
+    {
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println("Bluemix connected");
+  }
+}
+
+int pos = 0;
+
+void loop() 
+{
+  sensor_value=random(300,10000);
+  for (pos = 0; pos <= 180; pos += 1) 
+  {
+    servo.write(pos);
+    delay(15);
+  }
+  String payload = "{\"d\":{\"Name\":\"" DEVICE_ID "\"";
+  payload += ",\"GasValue\":";
+  payload += sensor_value;
+  payload += "ppm";
+  payload += "}}";
+  if(sensor_value>1000)
+  {
+    digitalWrite(led, HIGH);
+    delay(500);
+    tone(buzzer,1000);
+    delay(1000);
+    payload += "High";
+    val = digitalRead(pir);
+    if (val == HIGH) 
+    {
+      if (pirState == LOW) 
+      {
+        Serial.println("Motion detected! Evacuate NOW!!!");
+      }
+    }
+    else
+    {
+      Serial.println("No Motion detected! Door Closes NOW!!!");
+      for (pos = 180; pos >= 0; pos -= 1) 
+      {
+        servo.write(pos);
+        delay(15);
+      }
+    }
+  }
+  Serial.print("Sending value: ");
+  Serial.println(payload);
+  if (client.publish(pubTopic, (char*) payload.c_str())) 
+  {
+    Serial.println("Publish Success");
+  } 
+  else 
+  {
+    Serial.println("Publish Failed");
+  }
+  delay(100);
+}
