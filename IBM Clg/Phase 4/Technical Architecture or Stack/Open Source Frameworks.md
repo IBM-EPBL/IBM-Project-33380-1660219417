@@ -1,2 +1,0 @@
-WOKWI:
-  https://wokwi.com/
