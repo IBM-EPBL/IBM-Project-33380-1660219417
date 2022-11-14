@@ -1,4 +1,4 @@
-Debugging:
+DEBUGGING:-
 
    <img width="464" alt="image" src="https://user-images.githubusercontent.com/85072435/201739357-3f7a8d24-d636-4c47-8fc8-935cbe01b290.png">
   
@@ -7,7 +7,7 @@ Debugging:
    <img width="461" alt="image" src="https://user-images.githubusercontent.com/85072435/201739817-51100aca-bd7b-4370-abb5-828dcd1d9e15.png">
 
 
-Exception Handling:
+EXCEPTION HANDLING:-
 
    If wokwi couldn't connect to wifi, it will try to reconnect.
 
