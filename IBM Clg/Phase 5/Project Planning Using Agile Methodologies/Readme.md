@@ -5,7 +5,7 @@ IBM Project Workspace
 <img width="719" alt="image" src="https://user-images.githubusercontent.com/85072435/201854936-5f6dea64-e0cd-4384-9562-54d3a1407902.png">
 
 
-PROJECT PLANNING TOOLS:
+PROJECT PLANNING TOOLS:-
 
 Mural:
 
