@@ -1,4 +1,4 @@
-DEBUGGING & Traceability:-
+DEBUGGING & TRACEABILITY:-
 
    <img width="464" alt="image" src="https://user-images.githubusercontent.com/85072435/201739357-3f7a8d24-d636-4c47-8fc8-935cbe01b290.png">
   
